@@ -1,19 +1,117 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CPS Test</title>
-    <link href="style.css" rel="stylesheet" type="text/css" />
-    <script src="script.js">
-    </script>
+
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #e4d4ae;
+            font-family: "Courier New", Courier, monospace;
+            color: #2d261b;
+        }
+
+        .game {
+            width: min(90%, 520px);
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 8px;
+            font-size: 36px;
+        }
+
+        .info {
+            margin: 0 0 28px;
+            font-size: 16px;
+        }
+
+        #but {
+            width: 100%;
+            min-height: 240px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid #2d261b;
+            border-radius: 18px;
+            background: #f7edcf;
+            font-size: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            user-select: none;
+            transition: transform 0.08s ease, background 0.15s ease;
+        }
+
+        #but:hover { background: #fff7df; }
+        #but:active { transform: scale(0.98); }
+
+        #time {
+            margin-top: 22px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .hint {
+            margin-top: 14px;
+            font-size: 13px;
+            opacity: 0.7;
+        }
+    </style>
 </head>
+
 <body>
-    <div id="but" onclick="handleClick()">
-        Click me to start
-    </div>
-    <div id="time">
-        Time left at: Time
-    </div>
+    <main class="game">
+        <h1>CPS Test</h1>
+        <p class="info">Click as fast as you can for 15 seconds.</p>
+
+        <div id="but" onclick="handleClick()">Click me to start</div>
+
+        <div id="time">Time left: 15</div>
+        <p class="hint">Your score will be shown when the timer ends.</p>
+    </main>
+
+    <script>
+        let clicks = 0;
+        let timeLeft = 15;
+        let timerStarted = false;
+        let timer;
+
+        const button = document.getElementById("but");
+        const timeDisplay = document.getElementById("time");
+
+        function handleClick() {
+            clicks++;
+            button.textContent = clicks;
+
+            // Start the countdown on the first click.
+            if (!timerStarted) {
+                timerStarted = true;
+
+                timer = setInterval(() => {
+                    timeLeft--;
+                    timeDisplay.textContent = "Time left: " + timeLeft;
+
+                    if (timeLeft <= 0) {
+                        clearInterval(timer);
+
+                        const cps = clicks / 15;
+                        button.textContent = cps.toFixed(2) + " clicks/sec";
+                        timeDisplay.textContent = "Final score: " + clicks + " clicks";
+
+                        button.style.cursor = "default";
+                        button.removeAttribute("onclick");
+                    }
+                }, 1000);
+            }
+        }
+    </script>
 </body>
 </html>
